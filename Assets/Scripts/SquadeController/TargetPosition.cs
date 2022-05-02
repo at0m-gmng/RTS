@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class TargetPosition : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class TargetPosition : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             TargetPos(TouchRay);
     }
 
@@ -20,8 +21,19 @@ public class TargetPosition : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit)) // проверяем, попал ли луч во что-то
         {
-            Debug.Log(hit.point);
-            transform.position = hit.point;
+            // Debug.Log(hit.transform.gameObject.name);
+            if (FindObjectOfType<PlaceLogic>())
+            {
+                if (!FindObjectOfType<PlaceLogic>().IsBuilding)
+                {
+                    transform.position = hit.point;
+                }
+            }
+            else
+            {
+                transform.position = hit.point;
+            }
+            // Debug.Log(hit.point);
         }
     }
 }
